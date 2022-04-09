@@ -1,0 +1,401 @@
+---
+title: 'Case Study: How Does a Bike-Share Navigate Speedy Success?'
+author: "Bhavesh Upadhyay"
+date: '2022-03-15'
+output:
+  pdf_document: default
+  html_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Bike Share Report
+
+Welcome to the Cyclistic bike-share analysis case study! In this case study, I will perform many real-world tasks of a junior data analyst. You will work for a fictional company, Cyclistic, and meet different characters and team members. In order to answer the key business questions.
+
+The director of marketing believes the company’s future success depends on maximizing the number of annual memberships. Therefore, my team wants to **Understand how casual riders and annual members use Cyclistic bikes differently.** From these insights, my team will **design a new marketing strategy to convert casual riders into annual members.** But first, Cyclistic executives must approve your recommendations, so they must be backed up with compelling data insights and professional data
+visualizations.
+
+## About the company
+
+* In 2016, Cyclistic launched a successful bike-share offering. Since then, the program has grown to a fleet of 5,824 bicycles that
+are geotracked and locked into a network of 692 stations across Chicago. The bikes can be unlocked from one station and
+returned to any other station in the system anytime.
+
+* Until now, Cyclistic’s marketing strategy relied on building general awareness and appealing to broad consumer segments.One approach that helped make these things possible was the flexibility of its pricing plans: single-ride passes, full-day passes,and annual memberships. Customers who purchase single-ride or full-day passes are referred to as casual riders. Customers who purchase annual memberships are Cyclistic members.
+
+* Cyclistic’s finance analysts have concluded that annual members are much more profitable than casual riders. Although the
+pricing flexibility helps Cyclistic attract more customers, Moreno believes that maximizing the number of annual members will be key to future growth. Rather than creating a marketing campaign that targets all-new customers, Moreno believes there is a very good chance to convert casual riders into members. She notes that casual riders are already aware of the Cyclistic program and have chosen Cyclistic for their mobility needs.
+
+* Moreno has set a clear goal: Design marketing strategies aimed at converting casual riders into annual members. In order to do that, however, the marketing analyst team needs to better understand how annual members and casual riders differ, why casual riders would buy a membership, and how digital media could affect their marketing tactics. Moreno and her team are interested in analyzing the Cyclistic historical bike trip data to identify trends.
+
+
+# Ask
+
+* For the ask step, first let's get some context from the cyclistic document:
+
+Three questions will guide the future marketing program:
+
+1. How do annual members and casual riders use Cyclistic bikes differently?
+2. Why would casual riders buy Cyclistic annual memberships?
+3. How can Cyclistic use digital media to influence casual riders to become members?
+
+**Guiding questions**
+
+* **What is the problem you are trying to solve?**
+
+Ans: Design a new marketing strategy to convert casual riders into annual members, because annual members are much more profitable than casual riders. Maximizing the number of annual members will
+be key to future growth.
+
+* **How can your insights drive business decisions?**
+
+Ans: Design marketing strategies aimed at converting casual riders into annual members.Maximizing the number of annual members will
+be key to future growth.
+
+# Prepare
+
+* Data set provided from google.
+
+* Download the previous 12 months of Cyclistic trip data
+ <https://divvy-tripdata.s3.amazonaws.com/index.html> and store to local storage.
+
+* Storing previous 12 months data in 12 variable with list format. After storing, We use glimpse function to view column and datatype format. I have found that column in each variable are same. So bind data in one variable. We perform analysis on that.
+
+* That binded data is stored in RData format.
+
+* Because RData is a format designed for use with R, a system for statistical computation and related graphics, for storing a complete R workspace or selected "objects" from a workspace in a form that can be loaded back by R.
+
+**Guiding questions**
+
+* **Where is your data located?**
+
+Ans: Download the previous 12 months of Cyclistic trip data
+<https://divvy-tripdata.s3.amazonaws.com/index.html> and store to local storage.
+
+* **How is the data organized?** 
+
+Ans: Data is organized in different .csv file and uploaded and ordered by year.
+
+* **Are there issues with bias or credibility in this data? Does your data ROCCC?**
+
+Ans: Data is not bias and collected using bikers consent. finally, it's ROCCC because it's reliable, original, comprehensive, current and cited.
+
+* **How are you addressing licensing, privacy, security, and accessibility?**
+
+Ans: The company has their own licence over the dataset. Besides that, the dataset doesn't have any personal information about the riders.
+
+* **How did you verify the data’s integrity?**
+Ans: All the files have consistent columns and each column has the correct type of data.
+
+* **How does it help you answer your question?**
+
+Ans: On that data we have make desicion to get business growth.
+
+* **Are there any problems with the data?**
+
+Ans: All csv files contains same colums. Data contains some missing cells, We have remove to it. 
+
+# Process
+
+This step will prepare the data for analysis. All the csv files will be merged into one file to improve workflow
+
+**Guiding questions**
+
+* **What tools are you choosing and why?**
+
+Ans: I using R language and Tableau to make dashboad and easy to take insights. Because of the large dataset and to gather experience with the language.
+
+* **Have you ensured your data’s integrity?**
+
+Ans: Yes, the data is consistent throughout the columns.
+
+* **What steps have you taken to ensure that your data is clean?**
+
+Ans: Removing nulls and assign correct datatype to each column.
+
+* **Have you documented your cleaning process so you can review and share those results?**
+
+Ans:  Yes, it's all documented in this R notebook.
+
+
+## Setting up environment
+Setting up environment by loading 'tidyverse','ggplot', 'lubridate','janitor','dplyr','plyr','rmarkdown','scales'
+
+```{r echo=TRUE}
+library(tidyverse)
+library(janitor)
+library(lubridate)
+library(ggplot2)
+library(dplyr)
+library(plyr)
+library(scales)
+library(tinytex)
+```
+
+
+## Extract data from database
+ Download the previous 12 months of Cyclistic trip data
+<https://divvy-tripdata.s3.amazonaws.com/index.html> and store to local storage.
+
+Storing previous 12 months data in 12 variable with list format. After storing, We use glimpse function to view column and datatype format. I have found that column in each variable are same. So bind data in one variable. We perform analysis on that.
+
+That binded data is stored in RData format.
+
+Because RData is a format designed for use with R, a system for statistical computation and related graphics, for storing a complete R workspace or selected "objects" from a workspace in a form that can be loaded back by R.
+
+```{r}
+df1 <- read.csv("H:\\analytics\\google\\final csv in r\\202011-divvy-tripdata.csv") 
+glimpse(df1)
+df2 <- read.csv("H:\\analytics\\google\\final csv in r\\202012-divvy-tripdata.csv") 
+df3 <- read.csv("H:\\analytics\\google\\final csv in r\\202101-divvy-tripdata.csv") 
+df4 <- read.csv("H:\\analytics\\google\\final csv in r\\202102-divvy-tripdata.csv") 
+df5 <- read.csv("H:\\analytics\\google\\final csv in r\\202103-divvy-tripdata.csv") 
+df6 <- read.csv("H:\\analytics\\google\\final csv in r\\202104-divvy-tripdata.csv") 
+df7 <- read.csv("H:\\analytics\\google\\final csv in r\\202105-divvy-tripdata.csv") 
+df8 <- read.csv("H:\\analytics\\google\\final csv in r\\202106-divvy-tripdata.csv") 
+df9 <- read.csv("H:\\analytics\\google\\final csv in r\\202107-divvy-tripdata.csv") 
+df10 <- read.csv("H:\\analytics\\google\\final csv in r\\202108-divvy-tripdata.csv") 
+df11 <- read.csv("H:\\analytics\\google\\final csv in r\\202109-divvy-tripdata.csv") 
+df12 <- read.csv("H:\\analytics\\google\\final csv in r\\202110-divvy-tripdata.csv") 
+bike_ride <- rbind(df1,df2,df3,df4,df5,df6,df7,df8,df9,df10,df11,df12)
+```
+
+That bike_ride binded data is stored in RData format.
+
+Because RData is a format designed for use with R, a system for statistical computation and related graphics, for storing a complete R workspace or selected "objects" from a workspace in a form that can be loaded back by R.
+
+```{r }
+save(bike_ride,file = "H:\\pravin\\bike_ride.RData")
+
+```
+
+Again we use glimpse function on bike_ride and I have found that we have to assign appropriate datatype for each column
+
+
+```{r }
+
+bike_ride$started_at <- lubridate::ymd_hms(bike_ride$started_at)
+bike_ride$ended_at <- lubridate::ymd_hms(bike_ride$ended_at)
+
+bike_ride$started_at_date <- lubridate::ymd(bike_ride$started_at_date)
+bike_ride$ended_at_date <- lubridate::ymd(bike_ride$ended_at_date)
+
+bike_ride$started_at_time <- lubridate::hms(bike_ride$started_at_time)
+bike_ride$ended_at_time <- lubridate::hms(bike_ride$ended_at_time)
+
+bike_ride$ride_length <- lubridate::hms(bike_ride$ride_length)
+
+bike_ride$start_hour <-  lubridate::hour(bike_ride$started_at_time)
+bike_ride$end_hour <- lubridate::hour(bike_ride$ended_at_time)
+
+bike_ride$start_hour <- as.integer(bike_ride$start_hour)
+bike_ride$end_hour <- as.integer(bike_ride$end_hour)
+```
+
+The bike_ride RData is cleaned and ready to perform analysis.
+
+## Plot of Count of casual and annual member in previous 12 months.
+```{r echo=TRUE}
+ggplot(data = bike_ride)+
+  geom_bar(mapping=aes(x=bike_ride$member_casual),width = 0.2)+
+  scale_y_continuous(labels = comma)+
+  labs(title ="Count of member",x="Name of member",y="Count of member")
+```
+
+## Plot of count of ride in Day of week in previous 12 months.
+```{r echo=TRUE}
+bike_ride %>% 
+  group_by(member_casual,day_of_week)%>%
+  dplyr::summarise(no_of_rides = n())%>%
+  arrange(member_casual,day_of_week)%>% 
+  ggplot(aes(x=day_of_week,y=no_of_rides,fill=member_casual))+ geom_col(position = "dodge")+
+  scale_y_continuous(labels = comma)+
+  labs(title ="Count of ride by Day of Week",x="Day of week",y="Count of Ride")
+
+
+```
+
+## Plot of count of ride  in Hour in previous 12 months.
+```{r echo=TRUE}
+ggplot(data = bike_ride)+
+  geom_bar(mapping=aes(x=bike_ride$start_hour))+
+  scale_y_continuous(labels = comma)+
+  labs(title ="Count of ride by Hour in 12 months",x="Hour",y="Count of Ride")
+```
+
+## Count of Bike Type used by casual and annual member
+```{r echo=TRUE}
+
+bike_ride %>% 
+  group_by(member_casual,rideable_type)%>%
+  dplyr::summarise(no_of_rides = n())%>%
+  arrange(member_casual,rideable_type)%>% 
+  ggplot(aes(x=member_casual,y=no_of_rides,fill=rideable_type))+ 
+  geom_col(position = "dodge")+
+  labs(title ="Count of Bike Type used by casual and annual member",x="Membership type",y="Count of Rideable Type ")
+
+```
+
+
+
+## Descriptive Analysis / Analyze.
+
+The data exploration will consist of building a profile for annual members and how they differ from casual riders.
+
+```{r echo=TRUE}
+summary(bike_ride)
+```
+
+## Mean and Max of Ride Lenght.
+```{r echo=TRUE}
+summary(bike_ride$ride_length)
+aggregate(bike_ride$ride_length ~ bike_ride$member_casual+bike_ride$day_of_week,FUN = mean )
+
+```
+
+## Top Ten Start Stations for Casual Riders.
+```{r echo=TRUE}
+bike_ride %>% 
+  group_by(start_station_name)%>% 
+  filter(member_casual == "casual")%>%
+  dplyr::summarise(n = n())%>%
+  arrange(desc(n)) %>%
+  head(10)
+```
+
+## Top Ten Start Stations for member Riders.
+```{r echo=TRUE}
+bike_ride %>% 
+  group_by(start_station_name)%>% 
+  filter(member_casual == "member")%>%
+  dplyr::summarise(n = n())%>%
+  arrange(desc(n)) %>%
+  head(10)
+```
+
+## Use of bike by Hour of the Day
+```{r echo=TRUE}
+bike_ride%>%
+  ggplot(aes(start_hour,fill=member_casual))+
+  scale_y_continuous(labels = comma)+
+  labs(x="Hour of the Day", title="Use of bike by Hour of the Day")+
+  geom_bar()
+```
+
+From this chart, we can see that There's a bigger volume of bikers in the 10 to 19 for both casual and member.
+
+This chart can be expanded ween seen it divided by day of the week.
+
+# Use of bike by Hour of the Day divided by weekday
+```{r echo=TRUE}
+bike_ride%>%
+  ggplot(aes(start_hour,fill=member_casual))+
+  scale_y_continuous(labels = comma)+
+  labs(x="Hour of the Day", title="Use of bike by Hour of the Day divided by weekday")+
+  geom_bar()+
+  facet_wrap(~ day_of_week)
+
+```
+
+* It's important to note that:
+ + Classic bike is most used by casual and annual member.
+ + Members have a bigger preference for classic bikes.
+
+**Guiding questions**
+
+* **How should you organize your data to perform analysis on it?***
+
+Ans: All dataset have identical colums, assign proper data-type to columns and concatenate into one dataset. 
+
+* **Has your data been properly formatted?**
+
+Ans: Yes, all the columns have their correct data type.
+
+* **What surprises did you discover in the data?**
+
+Ans: One of the main surprises is for day of week 2 to 6 annual member ride bikes between 15 to 22 hour when analysed from weekdays, hours.
+
+* **What trends or relationships did you find in the data?**
+
+Ans:
+
+1. Classic bike is most used by casual and annual member.
+2. Casual member bike ride day and time is more on day of week 1 and 7 between 10 to 20 hour. 
+3. Members use bikes on schedules that differs from casual.
+4. Streeter Dr & Grand Ave is most preffered start station for casual riders.
+5. Clark St & Elm St is most preffered start station for annual members.
+
+* **How will these insights help answer your business questions?***
+Ans: Insights help to increase count of annual members. 
+
+## Shre
+
+The share phase is usually done by building a presentation/report.
+
+**Guiding questions**
+
+* **Were you able to answer the question of how annual members and casual riders use Cyclistic bikes differently?**
+
+Ans: Casual bikers use bike classic bike more. By advertising on digital platform, Posters and in news-paper to reach target audience. Also give discount on annual membership to increase count of annual members. 
+
+* **What story does your data tell?**
+
+Ans: The main story the data tells is that members have set schedules, as seen on "Use of bike by Hour of the Day" and "Use of bike by Hour of       the Day divided by weekday" charts.
+    
+* **How do your findings relate to your original question?**
+
+Ans: By finding the how casual and annual member uses different types of bikes for different purposes.
+
+
+* **Who is your audience? What is the best way to communicate with them?**
+
+Ans: The main target audience is my Cyclistic Marketing Analytics Team and      Lily Moreno. The best way to communicate is through a report                presentation of the findings.
+
+
+* **Can data visualization help you share your findings?**
+
+Ans: Yes, the main core of the finds is through data visualization.
+
+* **Is your presentation accessible to your audience?**
+
+Ans: Yes, the plots were made using vibrant colors, and corresponding labels.
+
+## Act
+
+The act phase would be done by the marketing team of the company. The main takeaway will be the top three recommendations for the marketing.
+
+**Guiding questions**
+
+* **What is your final conclusion based on your analysis?**
+
+Ans: By finding the how casual and annual member uses different types of       bikes for different purposes.
+
+* **How could your team and business apply your insights?**
+
+Ans: The insights could be implemented when preparing a marketing campaign for turning casual into members. The marketing can have a focus on workers as a green way to get to work.
+
+* **What next steps would you or your stakeholders take based on your findings?**
+
+Ans: Stakerholder consider insights which taken from visualization. Make strategy to increase annual member.
+
+* **Is there additional data you could use to expand on your findings?**
+Ans: Climate data gives more help to find how casual and annual member uses bike as per climate change.
+
+# Deliverable
+
+*Top three recommendations based on Analysis:
+
+1. Build a marketing campaign focusing on show how bikes help people to get to work, while maintaining the planet green and avoid traffic. The ads could be show on professional social networks.
+2. Increase benefits for riding during cold months. Coupons and discounts could be handed out.
+3. Also provide advertising holders on public places or at starting and ending station, to reach target audience.
+
+## Conclusion
+The Google Analytics Professional Certificate teached me a lot and the R language is really useful for analysing data. Rstudio is Great to handle large dataset easily.This took me more time than I expected, but it was extreamly fun.
+
+
+
+
+
+
